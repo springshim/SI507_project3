@@ -12,88 +12,88 @@ DBNAME = 'choc.db'
 BARSCSV = 'flavors_of_cacao_cleaned.csv'
 COUNTRIESJSON = 'countries.json'
 
-# conn = sqlite3.connect(DBNAME)
-# cur = conn.cursor()
+conn = sqlite3.connect(DBNAME)
+cur = conn.cursor()
 
-# statement = '''
-#     DROP TABLE IF EXISTS 'Bars';
-# '''
-# cur.execute(statement)
+statement = '''
+    DROP TABLE IF EXISTS 'Bars';
+'''
+cur.execute(statement)
 
-# statement = '''
-#     DROP TABLE IF EXISTS 'Countries';
-# '''
-# cur.execute(statement)
-# conn.commit()
-
-
-# statement = '''
-#     CREATE TABLE 'Countries' (
-#         'Id' INTEGER PRIMARY KEY AUTOINCREMENT,
-#         'Alpha2' TEXT NOT NULL,
-#         'Alpha3' TEXT NOT NULL,
-#         'EnglishName' TEXT NOT NULL,
-#         'Region' TEXT NOT NULL,
-#         'Subregion' TEXT NOT NULL,
-#         'Population' Integer NOT NULL,
-#         'Area' Real
-#     );
-# '''
-# cur.execute(statement)
+statement = '''
+    DROP TABLE IF EXISTS 'Countries';
+'''
+cur.execute(statement)
+conn.commit()
 
 
-# statement = '''
-#     CREATE TABLE 'Bars' (
-#         'Id' INTEGER PRIMARY KEY AUTOINCREMENT,
-#         'Company' TEXT NOT NULL,
-#         'SpecificBeanBarName' TEXT NOT NULL,
-#         'REF' TEXT NOT NULL,
-#         'ReviewDate' TEXT NOT NULL,
-#         'CocoaPercent' REAL,
-#         'CompanyLocation' TEXT,
-#         'CompanyLocationId' INTEGER,
-#         'Rating' REAL,
-#         'BeanType' TEXT NOT NULL,
-#         'BroadBeanOrigin' TEXT,
-#         'BroadBeanOriginId' INTEGER
-#     );
-# '''
-# cur.execute(statement)
+statement = '''
+    CREATE TABLE 'Countries' (
+        'Id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'Alpha2' TEXT NOT NULL,
+        'Alpha3' TEXT NOT NULL,
+        'EnglishName' TEXT NOT NULL,
+        'Region' TEXT NOT NULL,
+        'Subregion' TEXT NOT NULL,
+        'Population' Integer NOT NULL,
+        'Area' Real
+    );
+'''
+cur.execute(statement)
 
 
-# f = open(COUNTRIESJSON, "r", encoding='utf8')
-# jsonFile = f.read()
-# res = json.loads(jsonFile)
-# f.close()
+statement = '''
+    CREATE TABLE 'Bars' (
+        'Id' INTEGER PRIMARY KEY AUTOINCREMENT,
+        'Company' TEXT NOT NULL,
+        'SpecificBeanBarName' TEXT NOT NULL,
+        'REF' TEXT NOT NULL,
+        'ReviewDate' TEXT NOT NULL,
+        'CocoaPercent' REAL,
+        'CompanyLocation' TEXT,
+        'CompanyLocationId' INTEGER,
+        'Rating' REAL,
+        'BeanType' TEXT NOT NULL,
+        'BroadBeanOrigin' TEXT,
+        'BroadBeanOriginId' INTEGER
+    );
+'''
+cur.execute(statement)
 
-# for row in res:
-#     insertion = (None, row['alpha2Code'], row['alpha3Code'], row['name'], row['region'], row['subregion'], row['population'], row['area'])
-#     statement = 'INSERT INTO "Countries" '
-#     statement += 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
-#     cur.execute(statement, insertion)
-#     conn.commit()
+
+f = open(COUNTRIESJSON, "r", encoding='utf8')
+jsonFile = f.read()
+res = json.loads(jsonFile)
+f.close()
+
+for row in res:
+    insertion = (None, row['alpha2Code'], row['alpha3Code'], row['name'], row['region'], row['subregion'], row['population'], row['area'])
+    statement = 'INSERT INTO "Countries" '
+    statement += 'VALUES (?, ?, ?, ?, ?, ?, ?, ?)'
+    cur.execute(statement, insertion)
+    conn.commit()
 
 
 
-# with open(BARSCSV, encoding='utf8') as csvFile:
-#     res = csv.reader(csvFile)
+with open(BARSCSV, encoding='utf8') as csvFile:
+    res = csv.reader(csvFile)
 
-#     for row in res:
-#         CocoaPercent = str(row[4].replace('%',' '))
-#         row[4] = CocoaPercent
-#         countryId = cur.execute('SELECT Id, EnglishName from Countries').fetchall()
-#         for index in countryId:
-#             if (row[5] == index[1]):
-#                 CompanyLocationId = index[0]
-#             if (row[8] == index[1]):
-#                 BroadBeanOriginId = index[0]
+    for row in res:
+        CocoaPercent = str(row[4].replace('%',' '))
+        row[4] = CocoaPercent
+        countryId = cur.execute('SELECT Id, EnglishName from Countries').fetchall()
+        for index in countryId:
+            if (row[5] == index[1]):
+                CompanyLocationId = index[0]
+            if (row[8] == index[1]):
+                BroadBeanOriginId = index[0]
 
-#         if (row[0] != "Company"):
-#             insertion = (None, row[0], row[1], row[2], row[3], row[4], row[5], CompanyLocationId, row[6], row[7], row[8], BroadBeanOriginId)
-#             statement = 'INSERT INTO "Bars" '
-#             statement += 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
-#             cur.execute(statement, insertion)
-#             conn.commit()
+        if (row[0] != "Company"):
+            insertion = (None, row[0], row[1], row[2], row[3], row[4], row[5], CompanyLocationId, row[6], row[7], row[8], BroadBeanOriginId)
+            statement = 'INSERT INTO "Bars" '
+            statement += 'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)'
+            cur.execute(statement, insertion)
+            conn.commit()
 
 
 
